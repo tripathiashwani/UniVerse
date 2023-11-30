@@ -1,5 +1,4 @@
-<script setup>
-</script>
+
 
 <template>
   <nav class="py-10 px-8 border-b border-gray-200">
@@ -47,9 +46,36 @@
   
   <RouterView />
 </main>
-  
+  <Toast/>
 </template>
 
-<style scoped>
+<script>
+    import axios from 'axios'
+    import Toast from '@/components/Toast.vue'
+    import { useUserStore } from '@/stores/user'
+    export default {
+        setup() {
+            const userStore = useUserStore()
 
-</style>
+            return {
+                userStore
+            }
+        },
+
+        components: {
+            Toast
+           
+        },
+
+        beforeCreate() {
+            this.userStore.initStore()
+            const token = this.userStore.user.access
+
+            if (token) {
+                axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+            } else {
+                axios.defaults.headers.common["Authorization"] = "";
+            }
+        }
+    }
+</script>

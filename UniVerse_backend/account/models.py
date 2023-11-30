@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class CustomUserManager(UserManager):
     def _create_user(self, name, email, password, **extra_fields):
