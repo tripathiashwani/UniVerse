@@ -16,7 +16,6 @@ export const useToastStore = defineStore({
             this.message = message
             this.classes = classes
             this.isVisible = true
-
             setTimeout(() => {
                 this.classes += ' -translate-y-28'
             }, 10)
