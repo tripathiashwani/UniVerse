@@ -9,14 +9,21 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from .forms import SignupForm, ProfileForm
 from .models import User
 
-print("signup api reached")
+
+@api_view(['GET'])
+def me(request):
+    return JsonResponse({
+        'id': request.user.id,
+        'name': request.user.name,
+        'email': request.user.email,
+        'avatar': request.user.get_avatar()
+    })
+
 
 @api_view(['POST'])
 @authentication_classes([])
 @permission_classes([])
-
 def signup(request):
-    
     data = request.data
     message = 'success'
     print(data)
@@ -29,8 +36,9 @@ def signup(request):
 
     if form.is_valid():
         user = form.save()
-        user.is_active = False
-        user.save()
+        user.is_active = True
+        form.save()
+        
         print("signup validated in api")
 
 
