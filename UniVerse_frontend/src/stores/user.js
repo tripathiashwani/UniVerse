@@ -85,14 +85,13 @@ export const useUserStore = defineStore({
         },
 
         refreshToken() {
-            axios.post('/api/account/refresh/', {
+            axios.post('/api/refresh/', {
                 refresh: this.user.refresh
             })
                 .then((response) => {
+                    console.log(response)
                     this.user.access = response.data.access
-
                     localStorage.setItem('user.access', response.data.access)
-
                     axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.access
                 })
                 .catch((error)=>{
