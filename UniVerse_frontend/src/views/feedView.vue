@@ -4,19 +4,6 @@ import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
 <template>
      <main class="px-8 py-6 bg-gray-100">
             <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
-                <!-- <div class="main-left col-span-1">
-                    <div class="p-4 bg-white border border-gray-200 text-center rounded-lg">
-                        <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full">
-                        
-                        <p><strong>Code With Stein</strong></p>
-
-                        <div class="mt-6 flex space-x-8 justify-around">
-                            <p class="text-xs text-gray-500">182 friends</p>
-                            <p class="text-xs text-gray-500">120 posts</p>
-                        </div>
-                    </div>
-                </div> -->
-
                 <div class="main-center col-span-3 space-y-4">
                     <div class="bg-white border border-gray-200 rounded-lg">
                         <form v-on:submit.prevent="submitform" method="post">
@@ -91,12 +78,14 @@ import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
 import axios from 'axios'
 import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
 import trends from '../components/trends.vue';
+import FeedItem from '../components/feedItem.vue'
 
 export default{
     name:'feedview',
     components: {
         PeopleYouMayKnow,
         trends,
+        FeedItem,
     },
     data() {
         return {
