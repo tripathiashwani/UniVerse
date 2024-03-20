@@ -1,5 +1,5 @@
 
-import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
+
 
 <template>
      <main class="px-8 py-6 bg-gray-100">
@@ -9,6 +9,15 @@ import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
                         <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full">
                         
                         <p><strong>{{ user.name }}</strong></p>
+                        <div class="mt-6">
+                            <button 
+                                    class="inline-block py-4 px-3 bg-purple-600 text-xs text-white rounded-lg" 
+                                    @click="sendFriendshipRequest"
+                                    v-if="userStore.user.id !== user.id && can_send_friendship_request"
+                                >
+                                    Send friendship request
+                           </button>
+                        </div>
 
                         <div class="mt-6 flex space-x-8 justify-around">
                             <p class="text-xs text-gray-500">182 friends</p>
@@ -91,32 +100,62 @@ import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
 <script>
 import axios from 'axios'
 import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
-import trends from '../components/trends.vue';
-import { useUserStore } from '@/stores/user'
+import Trends from '../components/Trends.vue';
+import { useUserStore } from '@/stores/user';
+import { useToastStore } from '@/stores/toast';
 
 export default{
     name:'Profileview',
     components: {
         PeopleYouMayKnow,
-        trends,
+        Trends,
     },
     setup() {
-            const userStore = useUserStore()
-            return {
-                userStore
-            }
-        },
+        const userStore = useUserStore()
+        const toastStore = useToastStore()
+
+        return {
+            userStore,
+            toastStore
+        }
+    },
     data() {
         return {
             posts: [],
             body: '',
-            user:{}
+            user:{},
+            can_send_friendship_request: null,
         }
     },
     mounted() {
         this.getFeed()
     },
+    watch: { 
+        '$route.params.id': {
+            handler: function() {
+                this.getFeed()
+            },
+            deep: true,
+            immediate: true
+        }
+    },
     methods: {
+        sendFriendshipRequest() {
+            axios
+                .post(`/api/friends/${this.$route.params.id}/request/`)
+                .then(response => {
+                    console.log('data', response.data)
+                    this.can_send_friendship_request = false
+                    if (response.data.message == 'request already sent') {
+                        this.toastStore.showToast(5000, 'The request has already been sent!', 'bg-red-300')
+                    } else {
+                        this.toastStore.showToast(5000, 'The request was sent!', 'bg-emerald-300')
+                    }
+                })
+                .catch(error => {
+                    console.log('error', error)
+                })
+        },
         getFeed() {
             axios
                 .get(`/api/posts/profile/${this.$route.params.id}/`)

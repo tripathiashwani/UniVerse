@@ -1,5 +1,4 @@
 
-import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
 
 <template>
      <main class="px-8 py-6 bg-gray-100">
@@ -20,7 +19,7 @@ import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
                     </div>
 
 
-                    <div class="p-4 bg-white border border-gray-200 rounded-lg"
+                    <!-- <div class="p-4 bg-white border border-gray-200 rounded-lg"
                         v-for="post in posts"
                         v-bind:key="post.id">
                         <div class="mb-6 flex items-center justify-between">
@@ -62,6 +61,14 @@ import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
                                 </svg>   
                             </div>   
                         </div>  
+                    </div> -->
+
+                    <div 
+                            class="p-4 bg-white border border-gray-200 rounded-lg"
+                            v-for="post in posts"
+                            v-bind:key="post.id"
+                            >
+                            <FeedItem v-bind:post="post" />
                     </div>
                 </div>
 
@@ -77,20 +84,21 @@ import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
 <script>
 import axios from 'axios'
 import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
-import trends from '../components/trends.vue';
-import FeedItem from '../components/feedItem.vue'
+import Trends from '../components/Trends.vue'
+import FeedItem from '../components/FeedItem.vue'
 
 export default{
     name:'feedview',
     components: {
         PeopleYouMayKnow,
-        trends,
+        Trends,
         FeedItem,
     },
     data() {
         return {
             posts: [],
             body: '',
+            color:'white'
         }
     },
     mounted() {
@@ -109,7 +117,6 @@ export default{
                     console.log('error', error)
                 })
         },
-
         deletePost(id) {
             this.posts = this.posts.filter(post => post.id !== id)
         },
