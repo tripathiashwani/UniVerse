@@ -5,4 +5,6 @@ urlpatterns = [
     path('', api.post_list, name='post_list'),
     path('create/', api.create_post, name='create_post'),
     path('profile/<uuid:id>/', api.profile_list, name='profile_list'),
+    path('<uuid:pk>/like/', api.post_like, name='post_like'),
+    
 ]
