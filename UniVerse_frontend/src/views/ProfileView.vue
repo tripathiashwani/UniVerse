@@ -1,6 +1,3 @@
-
-
-
 <template>
      <main class="px-8 py-6 bg-gray-100">
             <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
@@ -33,7 +30,8 @@
                 </div>
                
                 <div class="main-center col-span-3 space-y-4">
-                    <div class="bg-white border border-gray-200 rounded-lg" v-if="user.id===userStore.user.id">
+                    <div class="bg-white border border-gray-200 rounded-lg" v-if="user.id===userStore.user.id"
+                    >
                         <form v-on:submit.prevent="submitform" method="post">
                         <div class="p-4" >  
                             <textarea v-model="body" class="p-4 w-full bg-gray-100 rounded-lg" placeholder="What are you thinking about?"></textarea>
@@ -48,7 +46,7 @@
                     </div>
 
 
-                    <div class="p-4 bg-white border border-gray-200 rounded-lg"
+                    <!-- <div class="p-4 bg-white border border-gray-200 rounded-lg"
                         v-for="post in posts"
                         v-bind:key="post.id">
                         <div class="mb-6 flex items-center justify-between">
@@ -67,12 +65,12 @@
 
                         <div class="my-6 flex justify-between">
                             <div class="flex space-x-6">
-                                <div class="flex items-center space-x-2">
+                                <div class="flex items-center space-x-2" @click="likePost(post.id)">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                                     </svg>  
                                     
-                                    <span class="text-gray-500 text-xs">82 likes</span>
+                                    <span class="text-gray-500 text-xs">{{ post.likes_count }} likes</span>
                                 </div> 
                                 
                                 <div class="flex items-center space-x-2">
@@ -90,6 +88,13 @@
                                 </svg>   
                             </div>   
                         </div>  
+                    </div> -->
+                    <div 
+                            class="p-4 bg-white border border-gray-200 rounded-lg"
+                            v-for="post in posts"
+                            v-bind:key="post.id"
+                            >
+                            <FeedItem v-bind:post="post" />
                     </div>
                 </div>
 
@@ -101,6 +106,7 @@
 import axios from 'axios'
 import PeopleYouMayKnow from '../components/PeopleYouMayKnow.vue';
 import Trends from '../components/Trends.vue';
+import FeedItem from '../components/FeedItem.vue'
 import { useUserStore } from '@/stores/user';
 import { useToastStore } from '@/stores/toast';
 
@@ -109,11 +115,11 @@ export default{
     components: {
         PeopleYouMayKnow,
         Trends,
+        FeedItem,
     },
     setup() {
         const userStore = useUserStore()
         const toastStore = useToastStore()
-
         return {
             userStore,
             toastStore
@@ -183,7 +189,25 @@ export default{
                 .catch(error => {
                     console.log('error', error)
                 })
-        }
+        },
+        likePost(id) {
+            axios
+                .post(`/api/posts/${id}/like/`)
+                .then(response => {
+                    if (response.data.message == "liked") {
+                        this.post.likes_count += 1;
+                        // this.color="#FF0000";
+                    }
+                    else{
+                        this.post.likes_count -=1;
+                        // this.color="#ffffff";
+                    }
+                })
+                .catch(error => {
+                    console.log("error", error);
+                });
+        },
+
     }
 }
 </script>
