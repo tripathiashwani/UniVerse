@@ -9,6 +9,11 @@ class Like(models.Model):
     created_by = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+class Report(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_by = models.ForeignKey(User, related_name='reports', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -36,6 +41,8 @@ class Post(models.Model):
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
     likes = models.ManyToManyField(Like, blank=True)
     likes_count = models.IntegerField(default=0)
+    reports = models.ManyToManyField(Report, blank=True)
+    reports_count = models.IntegerField(default=0)
 
 
     # class Meta:
