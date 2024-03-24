@@ -1,4 +1,4 @@
-
+from django.db.models import Q
 from django.http import JsonResponse
 from rest_framework.decorators import api_view,authentication_classes,permission_classes
 from rest_framework.views import APIView
@@ -7,6 +7,7 @@ from .serializers import PostSerializer
 from rest_framework.response import Response
 from .forms import PostForm
 from account.serializers import UserSerializer
+# from notification.utils import create_notification
 from account.models import User
 
 
@@ -48,9 +49,7 @@ def post_like(request, pk):
         post.likes_count = post.likes_count + 1
         post.likes.add(like)
         post.save()
-
         # notification = create_notification(request, 'post_like', post_id=post.id)
-
         return JsonResponse({'message': 'liked'})
     else:
         like = post.likes.filter(created_by=request.user)
