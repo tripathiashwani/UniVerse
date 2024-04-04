@@ -150,7 +150,7 @@ export default{
             axios
                 .post(`/api/friends/${this.$route.params.id}/request/`)
                 .then(response => {
-                    console.log('data', response.data)
+                    // console.log('data', response.data)
                     this.can_send_friendship_request = false
                     if (response.data.message == 'request already sent') {
                         this.toastStore.showToast(5000, 'The request has already been sent!', 'bg-red-300')
@@ -167,12 +167,12 @@ export default{
                 .get(`/api/posts/profile/${this.$route.params.id}/`)
                 .then(response => {
                     console.log('data', response.data.posts)
-                   
                     this.posts = response.data.posts
                     this.user=response.data.user
+                    this.can_send_friendship_request = response.data.can_send_friendship_request
                 })
                 .catch(error => {
-                    console.log('error', error)
+                    console.log('error_hai', error)
                 })
         },
 
@@ -183,7 +183,7 @@ export default{
             axios
                 .post('/api/posts/create/',{'body':this.body})
                 .then(response => {
-                    console.log('data', response.data)
+                    // console.log('data', response.data)
                     this.posts.push(response.data)
                 })
                 .catch(error => {

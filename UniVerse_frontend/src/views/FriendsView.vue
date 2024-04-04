@@ -12,7 +12,6 @@
                 </div>
             </div>
         </div>
-
         <div class="main-center col-span-2 space-y-4">
             <div 
                 class="p-4 bg-white border border-gray-200 rounded-lg"
@@ -137,7 +136,6 @@ export default {
 
         handleRequest(status, pk) {
             console.log('handleRequest', status)
-
             axios
                 .post(`/api/friends/${pk}/${status}/`)
                 .then(response => {

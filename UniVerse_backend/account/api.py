@@ -71,13 +71,13 @@ def friends(request, pk):
 @api_view(['POST'])
 def send_friendship_request(request, pk):
     user = User.objects.get(pk=pk)
-    # print('created_for ',user.name)
+    # print('created_for ',user.name) 
     # print('created_by  ',request.user.name)
     check1 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=user)
     check2 = FriendshipRequest.objects.filter(created_for=user).filter(created_by=request.user)
     if not check1 and not check2:
         friendrequest = FriendshipRequest.objects.create(created_for=user, created_by=request.user)
-
+        
         # notification = create_notification(request, 'new_friendrequest', friendrequest_id=friendrequest.id)
         return JsonResponse({'message': 'friendship request created'})
     else:
@@ -90,11 +90,9 @@ def handle_request(request, pk, status):
     friendship_request = FriendshipRequest.objects.filter(created_for=request.user).get(created_by=user)
     friendship_request.status = status
     friendship_request.save()
-
     user.friends.add(request.user)
     user.friends_count = user.friends_count + 1
     user.save()
-
     request_user = request.user
     request_user.friends_count = request_user.friends_count + 1
     request_user.save()
@@ -102,3 +100,10 @@ def handle_request(request, pk, status):
     # notification = create_notification(request, 'accepted_friendrequest', friendrequest_id=friendship_request.id)
 
     return JsonResponse({'message': 'friendship request updated'})
+
+
+@api_view(['GET'])
+def my_friendship_suggestions(request):
+    serializer = UserSerializer(request.user.people_you_may_know.all(), many=True)
+
+    return JsonResponse(serializer.data, safe=False)
