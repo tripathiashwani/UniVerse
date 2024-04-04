@@ -154,6 +154,18 @@ export default {
                     console.log("error", error);
                 })
         },
+        commentPost(){
+            axios
+                .post(`/api/posts/${this.post.id}/comment/`,{'body':this.body})
+                .then(response => {
+                    console.log('data', response.data)
+                    this.posts.push(response.data)
+                    this.body=''
+                })
+                .catch(error => {
+                    console.log('error', error)
+                })
+        },
         toggleExtraModal() {
             console.log('toggleExtraModal')
 

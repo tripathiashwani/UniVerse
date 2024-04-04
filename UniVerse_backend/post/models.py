@@ -43,6 +43,8 @@ class Post(models.Model):
     likes_count = models.IntegerField(default=0)
     reports = models.ManyToManyField(Report, blank=True)
     reports_count = models.IntegerField(default=0)
+    comments = models.ManyToManyField(Comment, blank=True)
+    comments_count = models.IntegerField(default=0)
 
 
     # class Meta:

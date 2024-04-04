@@ -1,5 +1,3 @@
-
-
 <template>
      <main class="px-8 py-6 bg-gray-100">
             <div class="max-w-7xl mx-auto grid grid-cols-4 gap-4">
@@ -26,7 +24,7 @@
                             v-for="post in posts"
                             v-bind:key="post.id"
                             >
-                            <FeedItem v-bind:post="post" />
+                            <FeedItem v-bind:post="post"  />
                     </div>
                 </div>
 
@@ -48,7 +46,6 @@ import FeedItem from '../components/FeedItem.vue'
 
 
 export default{
-    
     name:'feedview',
     components: {
         PeopleYouMayKnow,
@@ -71,7 +68,6 @@ export default{
                 .get('/api/posts/')
                 .then(response => {
                     console.log('data', response.data)
-
                     this.posts = response.data
                 })
                 .catch(error => {
