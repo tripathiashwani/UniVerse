@@ -128,7 +128,6 @@ export default {
         },
         deletePost() {
             this.$emit('deletePost', this.post.id)
-
             axios
                 .delete(`/api/posts/${this.post.id}/delete/`)
                 .then(response => {
@@ -145,7 +144,6 @@ export default {
                 .post(`/api/posts/${this.post.id}/report/`)
                 .then(response => {
                     console.log(response.data)
-
                     this.toastStore.showToast(5000, 'The post was reported', 'bg-emerald-500')
                 })
                 .catch(error => {
