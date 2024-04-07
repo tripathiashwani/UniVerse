@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '../views/feedView.vue'
 import signupView from '../views/signupView.vue'
 import loginView from '../views/loginView.vue'
 import feedView from '../views/feedView.vue'
@@ -8,6 +8,7 @@ import SearchView from '../views/SearchView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import FriendsView from '../views/FriendsView.vue'
 import postView from '../views/postView.vue'
+import NotificationsView from '../views/NotificationsView.vue'
 
 
 const router = createRouter({
@@ -44,6 +45,11 @@ const router = createRouter({
       component: SearchView
     },
     {
+      path: '/notifications',
+      name: 'notifications',
+      component: NotificationsView
+    },
+    {
       path: '/profile/:id',
       name: 'profile',
       component: ProfileView
@@ -58,6 +64,7 @@ const router = createRouter({
       name: 'postview',
       component: postView
     },
+
     {
       path: '/about',
       name: 'about',

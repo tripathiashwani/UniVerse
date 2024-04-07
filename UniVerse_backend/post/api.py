@@ -7,7 +7,7 @@ from .serializers import PostSerializer,PostDetailSerializer,CommentSerializer
 from rest_framework.response import Response
 from .forms import PostForm,CommentForm
 from account.serializers import UserSerializer
-# from notification.utils import create_notification
+from notification.utils import create_notification
 from account.models import User, FriendshipRequest
 
 
@@ -88,7 +88,7 @@ def post_like(request, pk):
         post.likes_count = post.likes_count + 1
         post.likes.add(like)
         post.save()
-        # notification = create_notification(request, 'post_like', post_id=post.id)
+        notification = create_notification(request, 'post_like', post_id=post.id)
         return JsonResponse({'message': 'liked'})
     else:
         like = post.likes.filter(created_by=request.user)
@@ -110,7 +110,7 @@ def post_report(request, pk):
         count=print(post.reports_count,"report_countiiiii")
         post.reports.add(report)
         post.save()
-        # notification = create_notification(request, 'post_reported', post_id=post.id)
+        notification = create_notification(request, 'post_reported', post_id=post.id)
         return JsonResponse({'message': 'reported'})
     print(count)
     return JsonResponse({'message':'already reported'})
@@ -162,7 +162,7 @@ def post_create_comment(request, pk):
     post.comments_count = post.comments_count + 1
     post.save()
 
-    # notification = create_notification(request, 'post_comment', post_id=post.id)
+    notification = create_notification(request, 'post_comment', post_id=post.id)
 
     serializer = CommentSerializer(comment)
 
