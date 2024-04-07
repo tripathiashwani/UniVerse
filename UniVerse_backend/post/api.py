@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view,authentication_classes,permission_classes
 from rest_framework.views import APIView
 from .models import Post,Like,Report,Comment
-from .serializers import PostSerializer
+from .serializers import PostSerializer,PostDetailSerializer,CommentSerializer
 from rest_framework.response import Response
 from .forms import PostForm,CommentForm
 from account.serializers import UserSerializer
@@ -137,3 +137,33 @@ def create_comment(request,pk):
         serilaizer=PostSerializer(comment)
         return JsonResponse(serilaizer.data,safe=False)
     return JsonResponse({'data':'msg from back'})
+
+
+@api_view(['GET'])
+def post_detail(request, pk):
+    user_ids = [request.user.id]
+
+    for user in request.user.friends.all():
+        user_ids.append(user.id)
+
+    post = Post.objects.filter(Q(created_by_id__in=list(user_ids))).get(pk=pk)
+
+    return JsonResponse({
+        'post': PostDetailSerializer(post).data
+    })
+
+
+@api_view(['POST'])
+def post_create_comment(request, pk):
+    comment = Comment.objects.create(body=request.data.get('body'), created_by=request.user)
+
+    post = Post.objects.get(pk=pk)
+    post.comments.add(comment)
+    post.comments_count = post.comments_count + 1
+    post.save()
+
+    # notification = create_notification(request, 'post_comment', post_id=post.id)
+
+    serializer = CommentSerializer(comment)
+
+    return JsonResponse(serializer.data, safe=False)
