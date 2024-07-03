@@ -81,7 +81,6 @@ def create_post(request):
 @api_view(['POST'])
 def post_like(request, pk):
     post = Post.objects.get(pk=pk)
-
     if not post.likes.filter(created_by=request.user):
         like = Like.objects.create(created_by=request.user)
         post = Post.objects.get(pk=pk)
@@ -107,7 +106,7 @@ def post_report(request, pk):
         report = Report.objects.create(created_by=request.user)
         post = Post.objects.get(pk=pk)
         post.reports_count = post.reports_count + 1
-        count=print(post.reports_count,"report_countiiiii")
+        # count=print(post.reports_count,"report_countiiiii")
         post.reports.add(report)
         post.save()
         notification = create_notification(request, 'post_reported', post_id=post.id)
