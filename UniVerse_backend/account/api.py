@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.mail import send_mail
 from django.http import JsonResponse
+from notification.utils import create_notification
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .forms import SignupForm, ProfileForm
@@ -54,7 +55,6 @@ def signup(request):
 def friends(request, pk):
     user = User.objects.get(pk=pk)
     requests = []
-
     if user == request.user:
         requests = FriendshipRequest.objects.filter(created_for=request.user, status=FriendshipRequest.SENT)
         requests = FriendshipRequestSerializer(requests, many=True)
@@ -78,7 +78,8 @@ def send_friendship_request(request, pk):
     if not check1 and not check2:
         friendrequest = FriendshipRequest.objects.create(created_for=user, created_by=request.user)
         
-        # notification = create_notification(request, 'new_friendrequest', friendrequest_id=friendrequest.id)
+        notification = create_notification(request, 'new_friendrequest', friendrequest_id=friendrequest.id)
+        # print(notification)
         return JsonResponse({'message': 'friendship request created'})
     else:
         return JsonResponse({'message': 'request already sent'})
@@ -96,9 +97,7 @@ def handle_request(request, pk, status):
     request_user = request.user
     request_user.friends_count = request_user.friends_count + 1
     request_user.save()
-
-    # notification = create_notification(request, 'accepted_friendrequest', friendrequest_id=friendship_request.id)
-
+    notification = create_notification(request, 'accepted_friendrequest', friendrequest_id=friendship_request.id)
     return JsonResponse({'message': 'friendship request updated'})
 
 

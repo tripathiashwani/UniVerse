@@ -3,7 +3,6 @@ from .models import Post ,Postattachments,Comment
 from account.serializers import UserSerializer
 
 
-
 class PostAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Postattachments
