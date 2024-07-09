@@ -101,7 +101,7 @@ export default {
         },
         getAvatarUrl(avatar) {
             // Assuming avatar is a relative path from the API server's base URL
-            return `http://127.0.0.1:8000/api${avatar}`
+            return `https://fit-akita-deciding.ngrok-free.app/api${avatar}`
         }
     }
 }
