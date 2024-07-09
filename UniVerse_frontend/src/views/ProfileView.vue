@@ -147,6 +147,7 @@ export default{
             }
           })
         //   this.userStore.user.avatar = "http://127.0.0.1:8000/api"+response.data.avatar
+        // https://fit-akita-deciding.ngrok-free.app/
         this.userStore.setUserInfo(response.data)
         console.log(this.userStore.user.avatar)
         this.avatar_=this.userStore.user.avatar
@@ -182,7 +183,7 @@ export default{
                     this.posts = response.data.posts
                     this.user=response.data.user
                     this.can_send_friendship_request = response.data.can_send_friendship_request
-                    this.avatar_="http://127.0.0.1:8000/api"+response.data.user.avatar
+                    this.avatar_="https://fit-akita-deciding.ngrok-free.app/api"+response.data.user.avatar
                 })
                 .catch(error => {
                     console.log('error_hai', error)
