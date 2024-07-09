@@ -3,23 +3,21 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from notification.utils import create_notification
-
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .forms import SignupForm, ProfileForm
 from .models import User, FriendshipRequest
 from .serializers import UserSerializer,FriendshipRequestSerializer
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
 
 
 
 @api_view(['GET'])
 def me(request):
-    return JsonResponse({
-        'id': request.user.id,
-        'name': request.user.name,
-        'email': request.user.email,
-        'avatar': request.user.get_avatar()
-    })
+    user = request.user
+    return JsonResponse(UserSerializer(user).data)
 
 
 @api_view(['POST'])
@@ -106,3 +104,17 @@ def my_friendship_suggestions(request):
     serializer = UserSerializer(request.user.people_you_may_know.all(), many=True)
 
     return JsonResponse(serializer.data, safe=False)
+
+
+
+class ProfilePictureUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def put(self, request, *args, **kwargs):
+        user_profile = request.user
+        serializer = UserSerializer(user_profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)

@@ -5,7 +5,7 @@
     <div class="max-w-7xl mx-auto">
         <div class="flex items-center justify-between">
             <div class="menu-left">
-                <a href="#" class="text-xl">Wey</a>
+                <a href="#" class="text-xl">Connect!</a>
             </div>
 
             <div class="menu-center flex space-x-12"
@@ -38,7 +38,8 @@
             <div class="menu-right">
                     <template v-if="userStore.user.isAuthenticated">
                         <RouterLink :to="{name: 'profile', params:{'id': userStore.user.id}}">
-                            <img src="https://i.pravatar.cc/40?img=70" class="rounded-full">
+                            <!-- <img src="https://i.pravatar.cc/40?img=70" class="rounded-full"> -->
+                            <img :src="userStore.user.avatar" class="w-[40px] h-[40px] rounded-full"/>
                         </RouterLink>
                     </template>
 
@@ -75,6 +76,20 @@ import { RouterLink } from 'vue-router'
             Toast
            
         },
+        data() {
+        return {
+            avatar_:""
+        }
+    },
+    //     watch: {
+    //     post: {
+    //         handler(newPost) {
+    //             this.avatar_ = "http://127.0.0.1:8000/api" + userStore.user.id.avatar;
+    //         },
+    //         immediate: true,
+    //         deep: true
+    //     },
+    // },
 
         beforeCreate() {
             this.userStore.initStore()

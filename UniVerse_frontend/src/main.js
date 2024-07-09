@@ -8,7 +8,7 @@ import router from './router'
 import axios from 'axios'
 
 const app = createApp(App)
-axios.defaults.baseURL='https://fit-akita-deciding.ngrok-free.app/'
+axios.defaults.baseURL='http://127.0.0.1:8000/'
 axios.defaults.headers.common["ngrok-skip-browser-warning"] = "true"
 
 app.use(createPinia())

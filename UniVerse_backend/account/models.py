@@ -1,11 +1,11 @@
 import uuid
-
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class CustomUserManager(UserManager):
     def _create_user(self, name, email, password, **extra_fields):
@@ -35,7 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=255, blank=True, null=True)
-    avatar = models.ImageField(upload_to='avatars', blank=True, null=True)
+    avatar = models.ImageField(upload_to='avatars', blank=True, null=True,default='avatars/my_pic_MAPGgqs.jpg')
     friends = models.ManyToManyField('self')
     friends_count = models.IntegerField(default=0)
     # report_count=models.IntegerField(default=0)
@@ -50,11 +50,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            User.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.User.save()
+
     def get_avatar(self):
         if self.avatar:
             return settings.WEBSITE_URL + self.avatar.url
         else:
             return 'https://picsum.photos/200/200'
+        
+
 
 class FriendshipRequest(models.Model):
     SENT = 'sent'
