@@ -27,12 +27,12 @@ export const useUserStore = defineStore({
                 this.user.id = localStorage.getItem('user.id')
                 this.user.name = localStorage.getItem('user.name')
                 this.user.email = localStorage.getItem('user.email')
-                // this.user.avatar = localStorage.getItem('user.avatar')
+                this.user.avatar = localStorage.getItem('user.avatar')
                 this.user.isAuthenticated = true
 
                 this.refreshToken()
 
-                console.log('Initialized user:', this.user)
+                console.log('Initialized user:', this.user.avatar)
             }
         },
 
@@ -42,7 +42,6 @@ export const useUserStore = defineStore({
             this.user.access = data.access
             this.user.refresh = data.refresh
             this.user.isAuthenticated = true
-
             localStorage.setItem('user.access', data.access)
             localStorage.setItem('user.refresh', data.refresh)
 
@@ -74,7 +73,7 @@ export const useUserStore = defineStore({
             this.user.id = user.id
             this.user.name = user.name
             this.user.email = user.email
-            this.user.avatar = user.avatar
+            this.user.avatar = "http://127.0.0.1:8000/api"+user.avatar
 
             localStorage.setItem('user.id', this.user.id)
             localStorage.setItem('user.name', this.user.name)

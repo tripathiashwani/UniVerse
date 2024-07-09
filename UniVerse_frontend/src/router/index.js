@@ -60,6 +60,11 @@ const router = createRouter({
       component: FriendsView
     },
     {
+      path: '/api/profile_picture',
+      name: 'friends',
+      component: FriendsView
+    },
+    {
       path: '/:id',
       name: 'postview',
       component: postView

@@ -20,7 +20,8 @@
                                 v-bind:key="user.id">
                                
                             <RouterLink :to="{name: 'profile', params:{'id': user.id}}">
-                                <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full">
+                                <!-- <img src="https://i.pravatar.cc/300?img=70" class="mb-6 rounded-full"> -->
+                                <img :src="getAvatarUrl(user.avatar)" class="w-[40px] h-[40px] rounded-full mb-6">
                                 <p><strong>{{ user.name }}</strong></p>
                             </RouterLink>
                            
@@ -72,7 +73,7 @@ export default {
         return {
             query: '',
             users: [],
-            posts: []
+            posts: [],
         }
     },
     mounted() {
@@ -89,7 +90,7 @@ export default {
                     query: this.query
                 })
                 .then(response => {
-                    console.log('response:', response.data)
+                    console.log('response:--', response.data)
                     localStorage.setItem('queryold',this.query)
                     this.users = response.data.users
                     this.posts = response.data.posts
@@ -97,6 +98,10 @@ export default {
                 .catch(error => {
                     console.log('error:', error)
                 })
+        },
+        getAvatarUrl(avatar) {
+            // Assuming avatar is a relative path from the API server's base URL
+            return `http://127.0.0.1:8000/api${avatar}`
         }
     }
 }

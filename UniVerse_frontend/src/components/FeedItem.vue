@@ -1,8 +1,16 @@
 <template>
     <div class="mb-6 flex items-center justify-between">
             <div class="flex items-center space-x-6">
-                <img src="https://i.pravatar.cc/300?img=70" class="w-[40px] rounded-full">
-                
+                <!-- <img src="https://i.pravatar.cc/300?img=70" class="w-[40px] rounded-full"> -->
+                <!-- <img :src="avatar_" class="mb-6 rounded-full"/> -->
+                <div v-if="avatar_">
+                <img :src="avatar_" class="w-[40px] h-[40px] rounded-full"/>
+            </div>
+            <div v-else>
+                <img src="https://i.pravatar.cc/300?img=70" class="w-[40px] h-[40px] rounded-full">
+            </div>
+                <!-- <p>{{ avatar_ }}</p> -->
+                <!-- <p>{{"http://127.0.0.1:8000/api"+ post.created_by.avatar }}</p> -->
                 <p>
                 <strong>
                     <RouterLink :to="{name: 'profile', params:{'id': post.created_by.id}}">{{ post.created_by.name }}</RouterLink>
@@ -105,9 +113,21 @@ export default {
     data() {
         return {
             color:'',
-            showExtraModal: false
+            showExtraModal: false,
+            // avatar_:"http://127.0.0.1:8000/api"+post.created_by.avatar 
+            avatar_:""
         }
     },
+    watch: {
+        post: {
+            handler(newPost) {
+                this.avatar_ = "http://127.0.0.1:8000/api" + newPost.created_by.avatar;
+            },
+            immediate: true,
+            deep: true
+        }
+    },
+    
     methods: {
         likePost(id) {
             axios
@@ -116,6 +136,7 @@ export default {
                     if (response.data.message == "liked") {
                         this.post.likes_count += 1;
                         this.color="#FF0000";
+                        this.setavatar()
                     }
                     else{
                         this.post.likes_count -=1;
