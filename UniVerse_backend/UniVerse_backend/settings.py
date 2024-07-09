@@ -81,6 +81,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+CORS_ALLOW_HEADERS = '*'
+
 ROOT_URLCONF = "UniVerse_backend.urls"
 
 TEMPLATES = [
