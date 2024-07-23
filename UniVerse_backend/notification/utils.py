@@ -3,6 +3,9 @@ from .models import Notification
 from post.models import Post
 from account.models import FriendshipRequest
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from .models import Notification
 # create_notification(request, 'post_like', 'lskjf-j12l3-jlas-jdfa', 'lskjf-j12l3-jlas-jdfa')
 
 
@@ -39,3 +42,26 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
     )
 
     return notification
+
+
+# def create_notification(request, notification_type, **kwargs):
+    # user = request.user
+    # recipient = kwargs.get('friendrequest_id').created_for
+
+    # notification = Notification.objects.create(
+    #     body=f"You have a new {notification_type.replace('_', ' ')}",
+    #     type_of_notification=notification_type,
+    #     created_by=user,
+    #     created_for=recipient,
+    # )
+
+    # # Send a real-time notification
+    # channel_layer = get_channel_layer()
+    # async_to_sync(channel_layer.group_send)(
+    #     f'notifications_{recipient.id}',
+    #     {
+    #         'type': 'notification_message',
+    #         'message': notification.body,
+    #     }
+    # )
+    # return notification

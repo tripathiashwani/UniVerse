@@ -73,8 +73,8 @@ export const useUserStore = defineStore({
             this.user.id = user.id
             this.user.name = user.name
             this.user.email = user.email
-            // this.user.avatar = "http://127.0.0.1:8000/api"+user.avatar
-            this.user.avatar = "https://fit-akita-deciding.ngrok-free.app/api"+user.avatar
+            this.user.avatar = "http://127.0.0.1:8000/api"+user.avatar
+            // this.user.avatar = "https://fit-akita-deciding.ngrok-free.app/api"+user.avatar
 
             localStorage.setItem('user.id', this.user.id)
             localStorage.setItem('user.name', this.user.name)
