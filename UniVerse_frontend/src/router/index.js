@@ -9,6 +9,7 @@ import ProfileView from '../views/ProfileView.vue'
 import FriendsView from '../views/FriendsView.vue'
 import postView from '../views/postView.vue'
 import NotificationsView from '../views/NotificationsView.vue'
+import ChatView from '../views/ChatView.vue';
 
 
 const router = createRouter({
@@ -68,6 +69,12 @@ const router = createRouter({
       path: '/:id',
       name: 'postview',
       component: postView
+    },
+    {
+      path: '/chat/:roomID',
+      name: 'ChatRoom',
+      component: ChatView,
+      props: true,
     },
 
     {

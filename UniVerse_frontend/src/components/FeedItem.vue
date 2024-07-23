@@ -97,6 +97,7 @@ import { RouterLink } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useToastStore } from '@/stores/toast'
 
+
 export default {
     props: {
         post: Object
@@ -121,7 +122,8 @@ export default {
     watch: {
         post: {
             handler(newPost) {
-                this.avatar_ = "https://fit-akita-deciding.ngrok-free.app/api" + newPost.created_by.avatar;
+                // this.avatar_ = "https://fit-akita-deciding.ngrok-free.app/api" + newPost.created_by.avatar;
+                this.avatar_ = "http://127.0.0.1:8000/api" + newPost.created_by.avatar;
             },
             immediate: true,
             deep: true
