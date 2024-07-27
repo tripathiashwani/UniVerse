@@ -50,6 +50,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
+    wallet = models.FloatField(default=0)
+    gain = models.FloatField(default=0)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):

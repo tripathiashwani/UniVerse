@@ -48,9 +48,11 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://freaky-friends.netlify.app",
     "http://*",
-    "https://*"
+    "https://*",
+    "http://localhost:5173",
     
 ]
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_HEADERS = '*'
 
@@ -71,12 +73,14 @@ INSTALLED_APPS = [
     "notification",
     "channels",
     "chat",
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -176,7 +180,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 ASGI_APPLICATION = "UniVerse_backend.asgi.application"
 
-CHANNEL_LAYERS = {
+CHANNEL_LAYERS = {  
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
@@ -195,3 +199,15 @@ CACHES = {
         }
     }
 }
+
+GRAPHENE = {
+    'SCHEMA': 'UniVerse_backend.schema.schema'  # update 'your_project_name' accordingly
+}
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
