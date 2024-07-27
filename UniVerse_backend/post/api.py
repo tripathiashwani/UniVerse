@@ -10,6 +10,8 @@ from account.serializers import UserSerializer
 from notification.utils import create_notification
 from account.models import User, FriendshipRequest
 
+from  .tasks import handle_like
+
 
 @api_view(['get'])
 def post_list(request):
@@ -78,24 +80,48 @@ def create_post(request):
     return JsonResponse({'data':'msg from back'})
 
 
+# @api_view(['POST'])
+# def post_like(request, pk):
+#     post = Post.objects.get(pk=pk)
+#     if not post.likes.filter(created_by=request.user):
+#         like = Like.objects.create(created_by=request.user)
+#         post = Post.objects.get(pk=pk)
+#         post.likes_count = post.likes_count + 1
+#         post.likes.add(like)
+#         post.save()
+#         notification = create_notification(request, 'post_like', post_id=post.id)
+#         return JsonResponse({'message': 'liked'})
+#     else:
+#         like = post.likes.filter(created_by=request.user)
+#         like.delete()
+#         post = Post.objects.get(pk=pk)
+#         post.likes_count = post.likes_count -1
+#         post.save()
+#         return JsonResponse({'message': 'disliked'})
+
+
+
 @api_view(['POST'])
 def post_like(request, pk):
     post = Post.objects.get(pk=pk)
-    if not post.likes.filter(created_by=request.user):
-        like = Like.objects.create(created_by=request.user)
-        post = Post.objects.get(pk=pk)
-        post.likes_count = post.likes_count + 1
+    user = request.user
+
+    if not post.likes.filter(created_by=user).exists():
+        # Like the post
+        like = Like.objects.create(created_by=user)
         post.likes.add(like)
-        post.save()
-        notification = create_notification(request, 'post_like', post_id=post.id)
-        return JsonResponse({'message': 'liked'})
+        action = 'like'
     else:
-        like = post.likes.filter(created_by=request.user)
+        # Unlike the post
+        like = post.likes.filter(created_by=user)
         like.delete()
-        post = Post.objects.get(pk=pk)
-        post.likes_count = post.likes_count -1
-        post.save()
-        return JsonResponse({'message': 'disliked'})
+        action = 'unlike'
+    
+    # Trigger Celery task
+    handle_like.delay(pk, user.id, action)
+    
+    # Return response
+    return JsonResponse({'message': 'liked' if action == 'like' else 'disliked'})
     
 
 @api_view(['POST'])
