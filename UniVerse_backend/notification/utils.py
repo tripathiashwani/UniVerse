@@ -1,7 +1,7 @@
 from .models import Notification
 
 from post.models import Post
-from account.models import FriendshipRequest
+from account.models import FriendshipRequest,User
 
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -43,6 +43,19 @@ def create_notification(request, type_of_notification, post_id=None, friendreque
 
     return notification
 
+def create_like_notification(user_name, post_id,created_by):
+    post = Post.objects.get(pk=post_id)
+    body = f'{user_name} liked one of your posts!'
+    userinstance = User.objects.get(email=created_by)
+    created_for = post.created_by
+    notification = Notification.objects.create(
+        body=body,
+        type_of_notification='post_like',
+        created_by=userinstance,
+        post_id=post_id,
+        created_for=created_for
+    )
+    return notification
 
 # def create_notification(request, notification_type, **kwargs):
     # user = request.user

@@ -33,7 +33,6 @@ def create_message(message, sender, room_name):
 
 @api_view(['GET'])
 def Get_Room(request, room):
-    print("----->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     messages = Conversation.objects.filter(room=room)  # Use filter instead of get
     print(messages)
     serializer = ConversationSerializer(messages, many=True)

@@ -80,48 +80,59 @@ def create_post(request):
     return JsonResponse({'data':'msg from back'})
 
 
-# @api_view(['POST'])
-# def post_like(request, pk):
-#     post = Post.objects.get(pk=pk)
-#     if not post.likes.filter(created_by=request.user):
-#         like = Like.objects.create(created_by=request.user)
-#         post = Post.objects.get(pk=pk)
-#         post.likes_count = post.likes_count + 1
-#         post.likes.add(like)
-#         post.save()
-#         notification = create_notification(request, 'post_like', post_id=post.id)
-#         return JsonResponse({'message': 'liked'})
-#     else:
-#         like = post.likes.filter(created_by=request.user)
-#         like.delete()
-#         post = Post.objects.get(pk=pk)
-#         post.likes_count = post.likes_count -1
-#         post.save()
-#         return JsonResponse({'message': 'disliked'})
-
-
-
 @api_view(['POST'])
 def post_like(request, pk):
     post = Post.objects.get(pk=pk)
-    user = request.user
-
-    if not post.likes.filter(created_by=user).exists():
-        # Like the post
-        like = Like.objects.create(created_by=user)
-        post.likes.add(like)
-        action = 'like'
+    if not post.likes.filter(created_by=request.user):
+        # like = Like.objects.create(created_by=request.user)
+        # post = Post.objects.get(pk=pk)
+        # post.likes_count = post.likes_count + 1
+        # post.likes.add(like)
+        # post.save()
+        # notification = create_notification(request, 'post_like', post_id=post.id)
+        # created_by=request.user
+        user_name=request.user.name
+        created_by=request.user
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print(created_by)
+        handle_like.delay(pk, str(created_by),str(user_name), action='like')
+        return JsonResponse({'message': 'liked'})
     else:
-        # Unlike the post
-        like = post.likes.filter(created_by=user)
-        like.delete()
-        action = 'unlike'
+        # like = post.likes.filter(created_by=request.user)
+        # like.delete()
+        # post = Post.objects.get(pk=pk)
+        # post.likes_count = post.likes_count -1
+        # post.save()
+        created_by=request.user
+        print(created_by)
+        user_name=request.user.name
+        handle_like.delay(pk, str(created_by),str(user_name), action='dislike')
+        return JsonResponse({'message': 'disliked'})
+
+
+
+
+# @api_view(['POST'])
+# def post_like(request, pk):
+#     post = Post.objects.get(pk=pk)
+#     user = request.user
+
+#     if not post.likes.filter(created_by=user).exists():
+#         # Like the post
+#         like = Like.objects.create(created_by=user)
+#         post.likes.add(like)
+#         action = 'like'
+#     else:
+#         # Unlike the post
+#         like = post.likes.filter(created_by=user)
+#         like.delete()
+#         action = 'unlike'
     
-    # Trigger Celery task
-    handle_like.delay(pk, user.id, action)
+#     # Trigger Celery task
+#     handle_like.delay(pk, user.id, action)
     
-    # Return response
-    return JsonResponse({'message': 'liked' if action == 'like' else 'disliked'})
+#     # Return response
+#     return JsonResponse({'message': 'liked' if action == 'like' else 'disliked'})
     
 
 @api_view(['POST'])
