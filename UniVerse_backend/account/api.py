@@ -33,7 +33,7 @@ def me(request):
     if not cached_user:
         print('not redis')
         cached_user = UserSerializer(user).data
-        cache.set(f'user_{user.id}', cached_user, timeout=60*5)  # Cache for 5 minutes
+        cache.set(f'user_{user.id}', cached_user, timeout=60*5)  
 
     return JsonResponse(cached_user)
 
@@ -102,7 +102,7 @@ def friends(request, pk):
             'friends': UserSerializer(friends, many=True).data,
             'requests': requests
         }
-        cache.set(cache_key, cached_data, timeout=60*5)  # Cache for 5 minutes
+        cache.set(cache_key, cached_data, timeout=60*5)  
 
     return JsonResponse(cached_data, safe=False)
 
@@ -132,8 +132,8 @@ def send_friendship_request(request, pk):
     if not check1 and not check2:
         friendrequest = FriendshipRequest.objects.create(created_for=user, created_by=request.user)
         create_notification(request, 'new_friendrequest', friendrequest_id=friendrequest.id)
-        cache.delete(f'friends_{request.user.id}')  # Clear cache
-        cache.delete(f'friends_{user.id}')          # Clear cache
+        cache.delete(f'friends_{request.user.id}') 
+        cache.delete(f'friends_{user.id}')          
         return JsonResponse({'message': 'friendship request created'})
     else:
         return JsonResponse({'message': 'request already sent'})
@@ -167,8 +167,8 @@ def handle_request(request, pk, status):
     request_user.save()
     create_notification(request, 'accepted_friendrequest', friendrequest_id=friendship_request.id)
     
-    cache.delete(f'friends_{request.user.id}')  # Clear cache
-    cache.delete(f'friends_{user.id}')          # Clear cache
+    cache.delete(f'friends_{request.user.id}')  
+    cache.delete(f'friends_{user.id}')         
     
     return JsonResponse({'message': 'friendship request updated'})
 
