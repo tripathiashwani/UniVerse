@@ -2,24 +2,17 @@
 from datetime import timedelta
 from pathlib import Path
 import os
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# from .private import OPENAI_API_KEY
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+OPENAI_API_KEY = os.getenv("API_KEY")
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-l*&95^m((bl(pk&u1#56$ax5*4gg$i_)izu$*r$m7x4w23%4l-"
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
-# Application definition
 AUTH_USER_MODEL='account.User'
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
@@ -30,10 +23,7 @@ SIMPLE_JWT = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    # )
+    )
 }
 
 CORS_ALLOWED_ORIGINS = [
@@ -74,6 +64,7 @@ INSTALLED_APPS = [
     "channels",
     "chat",
     'graphene_django',
+    'openai',
 ]
 
 MIDDLEWARE = [
@@ -201,7 +192,7 @@ CACHES = {
 }
 
 GRAPHENE = {
-    'SCHEMA': 'UniVerse_backend.schema.schema'  # update 'your_project_name' accordingly
+    'SCHEMA': 'UniVerse_backend.schema.schema'  
 }
 
 

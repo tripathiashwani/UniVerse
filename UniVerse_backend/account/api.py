@@ -12,6 +12,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from django.core.cache import cache
+import requests
+from rest_framework import status
+import openai
+from UniVerse_backend.settings import OPENAI_API_KEY
 
 
 
@@ -177,14 +181,19 @@ def handle_request(request, pk, status):
 
 @api_view(['GET'])
 def my_friendship_suggestions(request):
+    permission_classes = [IsAuthenticated]
     cache_key = f'friendship_suggestions_{request.user.id}'
     suggestions = cache.get(cache_key)
     
     if not suggestions:
-        suggestions = UserSerializer(request.user.people_you_may_know.all(), many=True).data
-        cache.set(cache_key, suggestions, timeout=60*5)  # Cache for 5 minutes
+        try:
+            suggestions = UserSerializer(request.user.people_you_may_know.all(), many=True).data
+            cache.set(cache_key, suggestions, timeout=60*5)  # Cache for 5 minutes
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     
     return JsonResponse(suggestions, safe=False)
+
 
 
 # class ProfilePictureUpdateView(APIView):
@@ -213,3 +222,30 @@ class ProfilePictureUpdateView(APIView):
             return Response(serializer.data)
         
         return Response(serializer.errors, status=400)
+    
+
+
+
+@authentication_classes([])
+@permission_classes([])
+class ChatbotView(APIView):
+    def post(self, request):
+        user_message = request.data.get("message")
+        openai.api_key = OPENAI_API_KEY
+        print(openai.api_key)
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": user_message}
+                ],
+                max_tokens=150,
+                temperature=0.7,
+            )
+            bot_reply = response['choices'][0]['message']['content']
+            return Response({"response": bot_reply}, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            print(e)
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

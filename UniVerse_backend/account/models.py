@@ -68,6 +68,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return 'https://picsum.photos/200/200'
         
+    @property
+    def people_you_may_know(self):
+        # Example logic to return a queryset of suggested users
+        return User.objects.exclude(id=self.id)  # Simplified example
+        
 
 
 class FriendshipRequest(models.Model):
