@@ -15,7 +15,7 @@ from django.core.cache import cache
 import requests
 from rest_framework import status
 import openai
-from UniVerse_backend.settings import OPENAI_API_KEY
+# from UniVerse_backend.settings import OPENAI_API_KEY
 
 
 
@@ -231,8 +231,8 @@ class ProfilePictureUpdateView(APIView):
 class ChatbotView(APIView):
     def post(self, request):
         user_message = request.data.get("message")
-        openai.api_key = OPENAI_API_KEY
-        print(openai.api_key)
+        # openai.api_key = OPENAI_API_KEY
+        
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
