@@ -5,7 +5,7 @@ import os
 # from .private import OPENAI_API_KEY
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-OPENAI_API_KEY = os.getenv("API_KEY")
+OPENAI_API_KEY = "API_KEY" # API_KEY is a placeholder for the actual API key
 
 SECRET_KEY = "django-insecure-l*&95^m((bl(pk&u1#56$ax5*4gg$i_)izu$*r$m7x4w23%4l-"
 
