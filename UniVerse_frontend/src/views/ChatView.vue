@@ -55,7 +55,7 @@ export default {
 
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log('Received data:', data); // Debugging line
+        console.log('Received data:', data); 
           
           messages.value.push(data);
         

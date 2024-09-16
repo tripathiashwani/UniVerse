@@ -126,6 +126,7 @@ export default {
 
                     this.friendshipRequests = response.data.requests
                     this.friends = response.data.friends
+                    console.log('data', response.data)
                     this.user = response.data.user
                 })
                 .catch(error => {

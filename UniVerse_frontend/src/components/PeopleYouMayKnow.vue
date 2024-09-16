@@ -9,7 +9,7 @@
                     v-bind:key="user.id"
                 >
                     <div class="flex items-center space-x-2">
-                        <img :src="user.get_avatar" class="w-[40px] rounded-full">
+                        <img :src="`http://localhost:8000/api${user.avatar}`" class="w-[40px] rounded-full">
                         
                         <p class="text-xs"><strong>{{ user.name }}</strong></p>
                     </div>
@@ -39,8 +39,9 @@ export default {
             axios
                 .get('/api/friends/suggested/')
                 .then(response => {
+                    console.log("response.data")
                     console.log(response.data)
-
+                    
                     this.users = response.data
                 })
                 .catch(error => {
