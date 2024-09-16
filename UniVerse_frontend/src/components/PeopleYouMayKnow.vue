@@ -9,7 +9,8 @@
                     v-bind:key="user.id"
                 >
                     <div class="flex items-center space-x-2">
-                        <img :src="`http://localhost:8000/api${user.avatar}`" class="w-[40px] rounded-full">
+                        <!-- <img :src="`http://localhost:8000/api${user.avatar}`" class="w-[40px] rounded-full"> -->
+                        <img :src="`https://fit-akita-deciding.ngrok-free.app/api${user.avatar}`" class="w-[40px] rounded-full">
                         
                         <p class="text-xs"><strong>{{ user.name }}</strong></p>
                     </div>
