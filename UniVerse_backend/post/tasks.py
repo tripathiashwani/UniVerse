@@ -11,7 +11,6 @@ from .serializers import PostSerializer, PostDetailSerializer, CommentSerializer
 
 @shared_task
 def handle_like(pk, created_by, user_name,action):
-
     post = Post.objects.get(pk=pk)
     if action == 'like':
         userinstance = User.objects.get(email=created_by)

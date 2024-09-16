@@ -22,7 +22,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        # Handle received data here
+        
 
     async def send_notification(self, event):
         await self.send(text_data=json.dumps({

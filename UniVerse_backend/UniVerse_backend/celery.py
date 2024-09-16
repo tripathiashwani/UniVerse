@@ -8,8 +8,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'UniVerse_backend.settings')
 os.environ.setdefault('FORKED_BY_MULTIPROCESSING', '1')
 app = Celery('UniVerse_backend')
 
-# Using a string here means the worker doesn’t have to serialize
-# the configuration object to child processes.
+
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Load task modules from all registered Django app configs.
