@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     "channels",
     "chat",
     'graphene_django',
-    'openai',
+    'openai'
 ]
 
 MIDDLEWARE = [
@@ -195,3 +195,5 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+
+

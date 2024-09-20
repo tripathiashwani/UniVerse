@@ -15,14 +15,17 @@ from django.core.cache import cache
 import requests
 from rest_framework import status
 import openai
-# from UniVerse_backend.settings import OPENAI_API_KEY
+from rest_framework_simplejwt.tokens import RefreshToken
+from google.oauth2 import id_token
+from google.auth.transport import requests
+import google_auth_oauthlib.flow
+import aiohttp  # Added import for aiohttp
+from google.auth.transport import requests as google_requests
+from google.oauth2 import id_token
 
 
 
-# @api_view(['GET'])
-# def me(request):
-#     user = request.user
-#     return JsonResponse(UserSerializer(user).data)
+
 
 
 @api_view(['GET'])
@@ -173,11 +176,6 @@ def handle_request(request, pk, status):
     return JsonResponse({'message': 'friendship request updated'})
 
 
-# @api_view(['GET'])
-# def my_friendship_suggestions(request):
-#     serializer = UserSerializer(request.user.people_you_may_know.all(), many=True)
-
-#     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
 def my_friendship_suggestions(request):
@@ -218,7 +216,7 @@ class ProfilePictureUpdateView(APIView):
         
         if serializer.is_valid():
             serializer.save()
-            cache.delete(f'user_{request.user.id}')  # Clear cache
+            cache.delete(f'user_{request.user.id}') 
             return Response(serializer.data)
         
         return Response(serializer.errors, status=400)
@@ -249,3 +247,43 @@ class ChatbotView(APIView):
         except Exception as e:
             print(e)
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
+
+
+
+class GoogleLoginView(APIView):
+    def post(self, request, *args, **kwargs):
+        token = request.data.get('token')
+        print(token)
+        try:
+            
+            idinfo = id_token.verify_oauth2_token(
+                token,
+                google_requests.Request(),
+                '97172031860-7uchmbvb0q52fbt0d7u1omjsuuidhip3.apps.googleusercontent.com'
+            )
+
+            
+            if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                raise ValueError('Wrong issuer.')
+
+            email = idinfo.get('email')
+            user = User.objects.filter(email=email).first()
+            
+            if not user:
+                user = User.objects.create_user(name=email, email=email, password=None)
+
+            tokens = get_tokens_for_user(user)
+            return Response({'msg': 'Login success', 'tokens': tokens}, status=status.HTTP_200_OK)
+
+        except ValueError as e:
+            print(f"Token verification failed: {e}")
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
