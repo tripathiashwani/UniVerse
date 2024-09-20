@@ -36,6 +36,13 @@
               >
                 Update Avatar
               </button>
+              <button
+              v-if="user.id === userStore.user.id"
+              class="w-full py-2 px-3 bg-red-600 text-xs text-white rounded-lg hover:bg-red-700 transition duration-300"
+              @click="handleLogout"
+            >
+              Logout
+            </button>
             </div>
   
             <div class="mt-6 flex space-x-8 justify-around">
@@ -152,6 +159,14 @@
           }
         }
       },
+      async handleLogout() {
+     
+        this.userStore.removeToken()
+        this.toastStore.showToast(5000, 'Logged out successfully!', 'bg-emerald-300')
+        await nextTick()
+        this.router.push('/login')
+      
+    },
       sendFriendshipRequest() {
         axios
           .post(`/api/friends/${this.$route.params.id}/request/`)
@@ -174,8 +189,8 @@
             this.posts = response.data.posts
             this.user = response.data.user
             this.can_send_friendship_request = response.data.can_send_friendship_request
-            // this.avatar_ = "https://fit-akita-deciding.ngrok-free.app/api" + response.data.user.avatar
-            this.avatar_ = "http://localhost:8000/api" + response.data.user.avatar
+            this.avatar_ = "https://fit-akita-deciding.ngrok-free.app/api" + response.data.user.avatar
+            // this.avatar_ = "http://localhost:8000/api" + response.data.user.avatar
           })
           .catch(error => {
             console.log('error', error)

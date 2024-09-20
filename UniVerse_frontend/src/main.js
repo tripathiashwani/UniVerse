@@ -1,5 +1,5 @@
 import './assets/main.css';
-
+import vue3googleLogin from 'vue3-google-login';
 import { createApp, provide, h } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
@@ -13,6 +13,7 @@ axios.defaults.baseURL = 'http://localhost:8000/';
 // axios.defaults.headers.common["ngrok-skip-browser-warning"] = "true";
 
 // Create Vue app instance
+const clientID="97172031860-7uchmbvb0q52fbt0d7u1omjsuuidhip3.apps.googleusercontent.com"
 const app = createApp({
   setup() {
     provide(DefaultApolloClient, apolloClient);
@@ -20,9 +21,14 @@ const app = createApp({
   render: () => h(App),
 });
 
+app.use(vue3googleLogin, { clientId: clientID });
+
+
 // Use Pinia and router
 app.use(createPinia());
 app.use(router);
-
+app.use(vue3googleLogin, {
+  clientId: clientID,
+});
 // Mount the app
 app.mount('#app');

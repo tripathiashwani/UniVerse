@@ -57,6 +57,8 @@
                 </button>
               </div>
             </form>
+            
+         
           </div>
         </div>
       </div>
@@ -68,7 +70,7 @@
   import { useRouter } from 'vue-router'
   import axios from 'axios'
   import { useUserStore } from '@/stores/user'
-  
+
   export default {
     setup() {
       const userStore = useUserStore()
@@ -106,7 +108,6 @@
           }
         }
       }
-  
       return {
         form,
         errors,
