@@ -10,7 +10,7 @@ import FriendsView from '../views/FriendsView.vue'
 import postView from '../views/postView.vue'
 import NotificationsView from '../views/NotificationsView.vue'
 import ChatView from '../views/ChatView.vue';
-
+import Payment from '../components/Payment.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -75,6 +75,11 @@ const router = createRouter({
       name: 'ChatRoom',
       component: ChatView,
       props: true,
+    },
+    {
+      path: '/payment',
+      name: 'payment',
+      component: Payment
     },
 
     {

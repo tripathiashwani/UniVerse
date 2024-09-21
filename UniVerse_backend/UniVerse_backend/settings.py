@@ -1,6 +1,8 @@
 
 from datetime import timedelta
 from pathlib import Path
+import stripe
+
 import os
 # from .private import OPENAI_API_KEY
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -62,7 +64,8 @@ INSTALLED_APPS = [
     "channels",
     "chat",
     'graphene_django',
-    'openai'
+    'openai',
+    'payment',
 ]
 
 MIDDLEWARE = [
@@ -121,7 +124,7 @@ DATABASES = {
     }
 }
 
-
+SITE_URL="http://localhost:5173"
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -197,3 +200,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
 
+
+STRIPE_SECRET_KEY = "your-secret-key-here"
+STRIPE_PUBLISHABLE_KEY = "your-publishable-key-here"
+stripe.api_key = STRIPE_SECRET_KEY

@@ -10,5 +10,6 @@ urlpatterns = [
     path("api/search/", include("search.urls")),
     path("api/chats/", include("chat.urls")),
     path('api/notifications/', include('notification.urls')),
+    path('api/payment/', include('payment.urls')),
     path('graphql/', GraphQLView.as_view(graphiql=True)),
 ]
