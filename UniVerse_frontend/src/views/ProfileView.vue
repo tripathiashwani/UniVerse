@@ -37,7 +37,7 @@
             <button
               class="w-full py-2 px-3 bg-green-600 text-xs text-white rounded-lg hover:bg-green-700 transition duration-300"
               @click="$router.push({ name: 'payment' })">
-              Subscribe to Premium
+              Buy me a coffee
             </button>
           </div>
 
@@ -159,8 +159,8 @@ export default {
 
       this.userStore.removeToken()
       this.toastStore.showToast(5000, 'Logged out successfully!', 'bg-emerald-300')
-      await nextTick()
-      this.router.push('/login')
+      
+      window.location.href='http://localhost:5173/login'
 
     },
     sendFriendshipRequest() {

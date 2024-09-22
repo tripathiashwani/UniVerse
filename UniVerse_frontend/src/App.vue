@@ -111,6 +111,7 @@ import Chatbot from './components/Chatbot.vue'
 import { MessageCircleIcon, XIcon, MenuIcon, HomeIcon, MessageSquareIcon, BellIcon, SearchIcon } from 'lucide-vue-next'
 import { GoogleLogin } from 'vue3-google-login'
 
+
 const userStore = useUserStore()
 const isChatbotOpen = ref(false)
 const isMobileMenuOpen = ref(false)
@@ -130,7 +131,7 @@ const callback = async (response) => {
 
     const userResponse = await axios.get('/api/me/')
     userStore.setUserInfo(userResponse.data)
-    router.push('/feed')
+    window.location.href='http://localhost:5173/feed'
   } catch (err) {
     console.error('Error during Google login:', err)
   }

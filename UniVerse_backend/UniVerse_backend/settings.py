@@ -78,6 +78,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    'UniVerse_backend.middleware.ApiUsageTrackingMiddleware',
+    'UniVerse_backend.middleware.RateLimitMiddleware',    
 ]
 
 # CORS_ALLOW_HEADERS = [
@@ -124,7 +127,8 @@ DATABASES = {
     }
 }
 
-SITE_URL="http://localhost:5173"
+SITE_URL="https://freaky-friends.netlify.app"
+# SITE_URL="http://localhost:5173"
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

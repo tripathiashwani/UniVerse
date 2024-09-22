@@ -19,12 +19,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from google.oauth2 import id_token
 from google.auth.transport import requests
 import google_auth_oauthlib.flow
-import aiohttp  # Added import for aiohttp
+import aiohttp  
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
+from .secret import *
 
 
-
+from UniVerse_backend.middleware import ApiUsageTrackingMiddleware, RateLimitMiddleware
 
 
 
@@ -69,22 +70,7 @@ def signup(request):
 
     return JsonResponse({'message': message})
 
-# @api_view(['GET'])
-# def friends(request, pk):
-#     user = User.objects.get(pk=pk)
-#     requests = []
-#     if user == request.user:
-#         requests = FriendshipRequest.objects.filter(created_for=request.user, status=FriendshipRequest.SENT)
-#         requests = FriendshipRequestSerializer(requests, many=True)
-#         requests = requests.data
 
-#     friends = user.friends.all()
-
-#     return JsonResponse({
-#         'user': UserSerializer(user).data,
-#         'friends': UserSerializer(friends, many=True).data,
-#         'requests': requests
-#     }, safe=False)
 
 
 @api_view(['GET'])
@@ -110,21 +96,7 @@ def friends(request, pk):
     return JsonResponse(cached_data, safe=False)
 
 
-# @api_view(['POST'])
-# def send_friendship_request(request, pk):
-#     user = User.objects.get(pk=pk)
-#     # print('created_for ',user.name) 
-#     # print('created_by  ',request.user.name)
-#     check1 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=user)
-#     check2 = FriendshipRequest.objects.filter(created_for=user).filter(created_by=request.user)
-#     if not check1 and not check2:
-#         friendrequest = FriendshipRequest.objects.create(created_for=user, created_by=request.user)
-        
-#         notification = create_notification(request, 'new_friendrequest', friendrequest_id=friendrequest.id)
-#         # print(notification)
-#         return JsonResponse({'message': 'friendship request created'})
-#     else:
-#         return JsonResponse({'message': 'request already sent'})
+
     
 @api_view(['POST'])
 def send_friendship_request(request, pk):
@@ -142,20 +114,7 @@ def send_friendship_request(request, pk):
         return JsonResponse({'message': 'request already sent'})
 
 
-# @api_view(['POST'])
-# def handle_request(request, pk, status):
-#     user = User.objects.get(pk=pk)
-#     friendship_request = FriendshipRequest.objects.filter(created_for=request.user).get(created_by=user)
-#     friendship_request.status = status
-#     friendship_request.save()
-#     user.friends.add(request.user)
-#     user.friends_count = user.friends_count + 1
-#     user.save()
-#     request_user = request.user
-#     request_user.friends_count = request_user.friends_count + 1
-#     request_user.save()
-#     notification = create_notification(request, 'accepted_friendrequest', friendrequest_id=friendship_request.id)
-#     return JsonResponse({'message': 'friendship request updated'})
+
 @api_view(['POST'])
 def handle_request(request, pk, status):
     user = User.objects.get(pk=pk)
@@ -186,7 +145,7 @@ def my_friendship_suggestions(request):
     if not suggestions:
         try:
             suggestions = UserSerializer(request.user.people_you_may_know.all(), many=True).data
-            cache.set(cache_key, suggestions, timeout=60*5)  # Cache for 5 minutes
+            cache.set(cache_key, suggestions, timeout=60*5) 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     
@@ -194,17 +153,7 @@ def my_friendship_suggestions(request):
 
 
 
-# class ProfilePictureUpdateView(APIView):
-#     permission_classes = [IsAuthenticated]
-#     parser_classes = [MultiPartParser, FormParser]
 
-#     def put(self, request, *args, **kwargs):
-#         user_profile = request.user
-#         serializer = UserSerializer(user_profile, data=request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=400)
 
 class ProfilePictureUpdateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -229,7 +178,7 @@ class ProfilePictureUpdateView(APIView):
 class ChatbotView(APIView):
     def post(self, request):
         user_message = request.data.get("message")
-        # openai.api_key = OPENAI_API_KEY
+        openai.api_key = OPENAI_API_KEY
         
         try:
             response = openai.ChatCompletion.create(
@@ -261,6 +210,7 @@ def get_tokens_for_user(user):
 
 class GoogleLoginView(APIView):
     def post(self, request, *args, **kwargs):
+        
         token = request.data.get('token')
         print(token)
         try:
@@ -268,7 +218,7 @@ class GoogleLoginView(APIView):
             idinfo = id_token.verify_oauth2_token(
                 token,
                 google_requests.Request(),
-                '97172031860-7uchmbvb0q52fbt0d7u1omjsuuidhip3.apps.googleusercontent.com'
+                google_auth_key
             )
 
             
@@ -287,3 +237,5 @@ class GoogleLoginView(APIView):
         except ValueError as e:
             print(f"Token verification failed: {e}")
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+

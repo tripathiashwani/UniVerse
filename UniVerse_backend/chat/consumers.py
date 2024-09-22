@@ -37,16 +37,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print(f"Sender: {sender.name}")
             print(f"Sent To: {sent_to}")
 
-            # Fetch or create the conversation
+            
             conversation, created = await database_sync_to_async(Conversation.objects.get_or_create)(
                 room=self.room_name
             )
 
-            # Add users to the conversation if it's newly created
+            
             if created:
                 await database_sync_to_async(conversation.users.add)(sender, sent_to)
 
-            # Save the message to the database
+            
             message_obj =  await database_sync_to_async(ConversationMessage.objects.create)(
                 conversation=conversation,
                 sender=sender,
@@ -60,7 +60,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'sent_to': str(message_obj.sent_to),
             'created_at': message_obj.created_at_formatted()
             }
-            # Broadcast the message to the group
+            
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {

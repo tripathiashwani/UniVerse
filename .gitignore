@@ -1,2 +1,12 @@
 env
 
+UniVerse_backend\account
+UniVerse_backend/account/__pycache__
+UniVerse_backend/account/secret.py
+UniVerse_backend/payment/secret.py
+UniVerse_backend/account/__pycache__
+UniVerse_backend/payment/__pycache__
+UniVerse_backend/notification/__pycache__
+UniVerse_backend/post/__pycache__
+UniVerse_backend/search/__pycache__
+UniVerse_backend/chat/__pycache__
